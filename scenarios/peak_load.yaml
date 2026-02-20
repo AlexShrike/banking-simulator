@@ -1,0 +1,39 @@
+name: "Black Friday Peak Load"
+description: "Extreme transaction volume — stress test"
+duration_hours: 8
+speed_multiplier: 200  # 8 hours in ~2.4 minutes
+customers: 1000
+accounts_per_customer: 3
+initial_balance: 15000.00
+currency: "USD"
+
+transaction_rate:
+  peak_tps: 100  # Very high transaction rate
+  off_peak_tps: 50
+  business_hours: [6, 22]  # Extended busy hours
+  weekend_multiplier: 0.8
+
+fraud:
+  rate: 0.005  # Slightly higher fraud during peak shopping
+  patterns:
+    - type: card_testing
+      weight: 0.4
+      intensity: 1.2
+    - type: online_fraud
+      weight: 0.6
+      intensity: 1.5
+
+connections:
+  nexum_url: "http://localhost:8090"
+  bastion_url: "http://localhost:8080"
+  timeout_seconds: 15  # Shorter timeout for high load
+  max_retries: 2
+
+dashboard:
+  enabled: true
+  port: 8095
+
+metrics:
+  enabled: true
+  collect_interval_seconds: 0.5  # More frequent collection
+  retention_minutes: 30

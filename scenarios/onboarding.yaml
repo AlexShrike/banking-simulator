@@ -1,0 +1,25 @@
+name: "Customer Onboarding Wave"
+description: "100 new customers, KYC verification, first transactions"
+duration_hours: 48
+speed_multiplier: 200
+customers: 100
+accounts_per_customer: 1
+initial_balance: 0.00
+
+transaction_rate:
+  peak_tps: 3
+  off_peak_tps: 1
+  business_hours: [8, 18]
+
+fraud:
+  rate: 0.05
+  patterns:
+    - type: identity_theft
+      weight: 0.6
+    - type: large_amount
+      weight: 0.4
+
+onboarding:
+  kyc_approval_rate: 0.85
+  first_transaction_delay_hours: [1, 24]
+  initial_deposit_range: [100, 5000]

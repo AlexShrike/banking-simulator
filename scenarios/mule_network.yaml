@@ -1,0 +1,27 @@
+name: "Money Mule Network"
+description: "Detect circular transfers and layering between mule accounts"
+duration_hours: 72
+speed_multiplier: 500
+customers: 50
+accounts_per_customer: 2
+initial_balance: 10000.00
+
+transaction_rate:
+  peak_tps: 5
+  off_peak_tps: 2
+  business_hours: [0, 24]
+
+fraud:
+  rate: 0.40
+  patterns:
+    - type: mule_network
+      weight: 0.5
+      mule_accounts: 20
+      hops: 5
+      amounts: [1000, 5000, 10000]
+    - type: structuring
+      weight: 0.3
+      threshold: 10000
+      split_amounts: [4500, 4800, 4700]
+    - type: large_amount
+      weight: 0.2

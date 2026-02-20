@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking Simulator Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .status-dot.disconnected {
+            background: #ef4444;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto 1fr;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .control-panel {
+            grid-column: 1 / -1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .speed-input {
+            width: 80px;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-top: 1rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .live-feed {
+            grid-column: 1 / -1;
+            height: 400px;
+        }
+
+        .feed-container {
+            height: 320px;
+            overflow-y: auto;
+            background: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            padding: 1rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #10b981;
+            font-size: 0.875rem;
+        }
+
+        .transaction-item.fraud {
+            border-left-color: #ef4444;
+        }
+
+        .transaction-item.review {
+            border-left-color: #f59e0b;
+        }
+
+        .transaction-meta {
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .connection-status.connected {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .connection-status.disconnected {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #e2e8f0;
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .controls {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Banking Simulator Dashboard</h1>
+        <div class="status-indicator">
+            <div class="status-dot" id="connectionDot"></div>
+            <span id="connectionText">Connecting...</span>
+        </div>
+    </div>
+
+    <div id="connectionStatus" class="connection-status disconnected">
+        Connecting to simulation...
+    </div>
+
+    <div class="container">
+        <!-- Control Panel -->
+        <div class="card control-panel">
+            <h2>Simulation Control</h2>
+            <div class="controls">
+                <button class="btn btn-primary" id="startBtn" disabled>
+                    <span class="loading" id="startLoading" style="display: none;"></span>
+                    Start
+                </button>
+                <button class="btn btn-secondary" id="pauseBtn" disabled>Pause</button>
+                <button class="btn btn-secondary" id="resumeBtn" disabled>Resume</button>
+                <button class="btn btn-danger" id="stopBtn" disabled>Stop</button>
+                
+                <div class="speed-control">
+                    <label for="speedInput">Speed:</label>
+                    <input type="number" id="speedInput" class="speed-input" value="100" min="1" max="10000" step="1">
+                    <span>x</span>
+                    <button class="btn btn-primary" id="setSpeedBtn" disabled>Set</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overview Metrics -->
+        <div class="card">
+            <h2>Overview</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="totalTransactions">0</div>
+                    <div class="metric-label">Total Transactions</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="fraudTransactions">0</div>
+                    <div class="metric-label">Fraud Detected</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="customersCreated">0</div>
+                    <div class="metric-label">Customers</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="accountsCreated">0</div>
+                    <div class="metric-label">Accounts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="card">
+            <h2>Performance</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="transactionRate">0.0</div>
+                    <div class="metric-label">Transactions/sec</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="nexumLatency">0</div>
+                    <div class="metric-label">Nexum Latency (ms)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="bastionLatency">0</div>
+                    <div class="metric-label">Bastion Latency (ms)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="errorRate">0.0%</div>
+                    <div class="metric-label">Error Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="card">
+            <h2>Transaction Rate</h2>
+            <div class="chart-container" id="transactionChart">
+                Chart will appear here when data is available
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Fraud Detection</h2>
+            <div class="chart-container" id="fraudChart">
+                Fraud detection metrics will appear here
+            </div>
+        </div>
+
+        <!-- Live Transaction Feed -->
+        <div class="card live-feed">
+            <h2>Live Transaction Feed</h2>
+            <div class="feed-container" id="transactionFeed">
+                <div style="text-align: center; color: #64748b; padding: 2rem;">
+                    Waiting for transaction data...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/static/app.js"></script>
+</body>
+</html>

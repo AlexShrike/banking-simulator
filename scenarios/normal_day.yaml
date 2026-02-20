@@ -1,0 +1,50 @@
+name: "Normal Business Day"
+description: "Typical day with 10K transactions, 0.1% fraud rate"
+duration_hours: 24
+speed_multiplier: 100  # 24 hours in ~14 minutes
+customers: 500
+accounts_per_customer: 2
+initial_balance: 5000.00
+currency: "USD"
+
+transaction_rate:
+  peak_tps: 10  # Peak during business hours
+  off_peak_tps: 2
+  business_hours: [8, 18]  # 8am-6pm
+  weekend_multiplier: 0.3
+
+fraud:
+  rate: 0.001  # 0.1% of transactions
+  patterns:
+    - type: card_testing
+      weight: 0.3
+      intensity: 1.0
+    - type: velocity_attack
+      weight: 0.2
+      intensity: 1.0
+    - type: large_amount
+      weight: 0.3
+      intensity: 1.0
+    - type: unusual_location
+      weight: 0.2
+      intensity: 1.0
+
+# External connections
+connections:
+  nexum_url: "http://localhost:8090"
+  bastion_url: "http://localhost:8080"
+  timeout_seconds: 30
+  max_retries: 3
+
+# Dashboard configuration
+dashboard:
+  enabled: true
+  port: 8095
+  host: "0.0.0.0"
+
+# Metrics configuration
+metrics:
+  enabled: true
+  collect_interval_seconds: 1
+  retention_minutes: 60
+  export_csv: true

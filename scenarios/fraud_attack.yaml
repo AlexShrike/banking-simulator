@@ -1,0 +1,44 @@
+name: "Coordinated Fraud Attack"
+description: "Card testing attack at 2am followed by large fraudulent transfers"
+duration_hours: 4
+speed_multiplier: 50  # 4 hours in ~5 minutes
+customers: 200
+accounts_per_customer: 2
+initial_balance: 10000.00
+currency: "USD"
+
+transaction_rate:
+  peak_tps: 20  # Higher rate during attack
+  off_peak_tps: 5
+  business_hours: [2, 4]  # Attack window
+
+fraud:
+  rate: 0.15  # 15% fraud rate during attack
+  attack_window: [2, 3]  # 2am-3am concentrated attack
+  patterns:
+    - type: card_testing
+      count: 500
+      duration_minutes: 10
+      weight: 0.6
+      intensity: 2.0
+    - type: account_takeover
+      count: 20
+      follows: card_testing
+      delay_minutes: 30
+      weight: 0.4
+      intensity: 1.5
+
+connections:
+  nexum_url: "http://localhost:8090"
+  bastion_url: "http://localhost:8080"
+  timeout_seconds: 30
+  max_retries: 3
+
+dashboard:
+  enabled: true
+  port: 8095
+
+metrics:
+  enabled: true
+  collect_interval_seconds: 1
+  retention_minutes: 30
