@@ -16,6 +16,71 @@
             background: #f8fafc;
             color: #334155;
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sidebar-title {
+            color: #1A3C78;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-subtitle {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: #64748b;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            color: #1A3C78;
+        }
+
+        .nav-item.active {
+            background: #f1f5f9;
+            color: #1A3C78;
+            border-left-color: #1A3C78;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
         }
 
         .header {
@@ -25,13 +90,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
 
-        .header h1 {
+        .header-title {
             color: #1e293b;
             font-size: 1.5rem;
             font-weight: 600;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .status-indicator {
@@ -52,22 +126,31 @@
             background: #ef4444;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto 1fr;
+        .status-dot.warning {
+            background: #f59e0b;
         }
 
+        /* Content Area */
+        .content {
+            padding: 2rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Cards */
         .card {
             background: white;
             border-radius: 8px;
             padding: 1.5rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
         }
 
         .card h2 {
@@ -77,15 +160,81 @@
             color: #1e293b;
         }
 
-        .control-panel {
-            grid-column: 1 / -1;
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #1e293b;
         }
 
+        /* Grid Layouts */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* Metrics */
+        .metric-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .metric-card:hover {
+            border-color: #1A3C78;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 60, 120, 0.1);
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1A3C78;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-change {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .metric-change.positive {
+            color: #059669;
+        }
+
+        .metric-change.negative {
+            color: #dc2626;
+        }
+
+        /* Controls */
         .controls {
             display: flex;
             gap: 1rem;
             align-items: center;
             flex-wrap: wrap;
+            margin-bottom: 1.5rem;
         }
 
         .btn {
@@ -96,15 +245,18 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-primary {
-            background: #3b82f6;
+            background: #1A3C78;
             color: white;
         }
 
         .btn-primary:hover {
-            background: #2563eb;
+            background: #1e40af;
         }
 
         .btn-secondary {
@@ -125,54 +277,156 @@
             background: #dc2626;
         }
 
+        .btn-success {
+            background: #059669;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+        }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
-        .speed-control {
+        /* Form Elements */
+        .form-group {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .speed-input {
-            width: 80px;
-            padding: 0.25rem 0.5rem;
+        .form-control {
+            padding: 0.5rem;
             border: 1px solid #d1d5db;
             border-radius: 4px;
             font-size: 0.875rem;
         }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 200px;
         }
 
-        .metric-card {
-            text-align: center;
-            padding: 1rem;
+        .slider {
+            flex: 1;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #1A3C78;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Transaction Feed */
+        .feed-container {
+            height: 400px;
+            overflow-y: auto;
             background: #f8fafc;
             border-radius: 6px;
             border: 1px solid #e2e8f0;
+            padding: 1rem;
         }
 
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 0.25rem;
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #10b981;
+            font-size: 0.875rem;
+            animation: fadeIn 0.3s ease-in;
         }
 
-        .metric-label {
-            font-size: 0.75rem;
+        .transaction-item.approve {
+            border-left-color: #10b981;
+        }
+
+        .transaction-item.review {
+            border-left-color: #f59e0b;
+        }
+
+        .transaction-item.block {
+            border-left-color: #ef4444;
+        }
+
+        .transaction-meta {
             color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-size: 0.75rem;
         }
 
+        .transaction-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.approve {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-badge.review {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge.block {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        /* Charts */
         .chart-container {
             height: 300px;
             margin-top: 1rem;
@@ -183,77 +437,74 @@
             align-items: center;
             justify-content: center;
             color: #64748b;
+            position: relative;
         }
 
-        .live-feed {
-            grid-column: 1 / -1;
-            height: 400px;
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
         }
 
-        .feed-container {
-            height: 320px;
-            overflow-y: auto;
+        .progress-fill {
+            height: 100%;
+            background: #1A3C78;
+            transition: width 0.3s ease;
+        }
+
+        /* Customer List */
+        .customer-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .customer-card {
+            padding: 1rem;
             background: #f8fafc;
             border-radius: 6px;
             border: 1px solid #e2e8f0;
-            padding: 1rem;
-        }
-
-        .transaction-item {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            background: white;
+        }
+
+        .customer-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .risk-badge {
+            padding: 0.25rem 0.5rem;
             border-radius: 4px;
-            border-left: 4px solid #10b981;
-            font-size: 0.875rem;
-        }
-
-        .transaction-item.fraud {
-            border-left-color: #ef4444;
-        }
-
-        .transaction-item.review {
-            border-left-color: #f59e0b;
-        }
-
-        .transaction-meta {
-            color: #64748b;
             font-size: 0.75rem;
-        }
-
-        .connection-status {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
         }
 
-        .connection-status.connected {
+        .risk-low {
             background: #dcfce7;
             color: #166534;
-            border: 1px solid #bbf7d0;
         }
 
-        .connection-status.disconnected {
-            background: #fef2f2;
+        .risk-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .risk-high {
+            background: #fecaca;
             color: #991b1b;
-            border: 1px solid #fecaca;
         }
 
+        /* Loading Spinner */
         .loading {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             border: 2px solid #e2e8f0;
-            border-top: 2px solid #3b82f6;
+            border-top: 2px solid #1A3C78;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -263,27 +514,23 @@
             100% { transform: rotate(360deg); }
         }
 
-        .error-message {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease-in;
-        }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
+            .dashboard-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .content {
                 padding: 1rem;
             }
             
@@ -296,113 +543,382 @@
             .controls {
                 justify-content: center;
             }
+            
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Connection Overlay */
+        .connection-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .connection-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            margin: 2rem;
+        }
+
+        .connection-card h3 {
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .connection-card p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Scenario Timeline */
+        .timeline {
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .timeline-item.completed {
+            background: #dcfce7;
+        }
+
+        .timeline-item.current {
+            background: #fef3c7;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            background: #e2e8f0;
+        }
+
+        .timeline-item.completed .timeline-dot {
+            background: #059669;
+        }
+
+        .timeline-item.current .timeline-dot {
+            background: #f59e0b;
+        }
+
+        /* Hide scrollbars but keep functionality */
+        .feed-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .feed-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .feed-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .feed-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Banking Simulator Dashboard</h1>
-        <div class="status-indicator">
-            <div class="status-dot" id="connectionDot"></div>
-            <span id="connectionText">Connecting...</span>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Banking Simulator</div>
+                <div class="sidebar-subtitle">Real-time Dashboard</div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="control">Control Panel</a>
+                <a href="#" class="nav-item" data-page="livefeed">Live Feed</a>
+                <a href="#" class="nav-item" data-page="metrics">Metrics Dashboard</a>
+                <a href="#" class="nav-item" data-page="customers">Customers</a>
+                <a href="#" class="nav-item" data-page="scenario">Scenario Info</a>
+                <a href="#" class="nav-item" data-page="results">Results</a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title" id="pageTitle">Control Panel</div>
+                <div class="header-status">
+                    <div class="status-indicator">
+                        <div class="status-dot" id="nexumStatus"></div>
+                        <span>Nexum</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot" id="bastionStatus"></div>
+                        <span>Bastion</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot" id="kafkaStatus"></div>
+                        <span>Kafka</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot" id="wsStatus"></div>
+                        <span id="wsStatusText">Connecting...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Pages -->
+            <div class="content">
+                <!-- Control Panel Page -->
+                <div id="control" class="page active">
+                    <div class="card">
+                        <h2>Simulation Control</h2>
+                        
+                        <div class="controls">
+                            <div class="form-group">
+                                <label for="scenarioSelect">Scenario:</label>
+                                <select id="scenarioSelect" class="form-control">
+                                    <option value="normal_day">Normal Day</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary" id="startBtn">Start Simulation</button>
+                            <button class="btn btn-secondary" id="pauseBtn" disabled>Pause</button>
+                            <button class="btn btn-success" id="resumeBtn" disabled style="display: none;">Resume</button>
+                            <button class="btn btn-danger" id="stopBtn" disabled>Stop</button>
+                            
+                            <div class="form-group">
+                                <label>Dry-run:</label>
+                                <input type="checkbox" id="dryRunToggle">
+                            </div>
+                        </div>
+                        
+                        <div class="controls">
+                            <div class="slider-container">
+                                <label>Speed:</label>
+                                <input type="range" id="speedSlider" class="slider" min="1" max="1000" value="100">
+                                <span id="speedValue">100x</span>
+                                <button class="btn btn-primary" id="setSpeedBtn">Set Speed</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <h3>Simulation Status</h3>
+                            <div id="simulationStatus">
+                                <p><strong>Status:</strong> <span id="simStatus">Stopped</span></p>
+                                <p><strong>Current Time:</strong> <span id="simTime">--</span></p>
+                                <p><strong>Real Time:</strong> <span id="realTime">--</span></p>
+                                <p><strong>Speed:</strong> <span id="simSpeed">1x</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Quick Metrics</h3>
+                            <div class="grid grid-2">
+                                <div class="metric-card">
+                                    <div class="metric-value" id="quickTps">0</div>
+                                    <div class="metric-label">TPS</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value" id="quickTotal">0</div>
+                                    <div class="metric-label">Total</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Feed Page -->
+                <div id="livefeed" class="page">
+                    <div class="controls">
+                        <button class="btn btn-secondary" id="pauseFeedBtn">Pause Feed</button>
+                        <div class="form-group">
+                            <label for="feedFilter">Filter:</label>
+                            <select id="feedFilter" class="form-control">
+                                <option value="all">All Decisions</option>
+                                <option value="approve">Approved</option>
+                                <option value="review">Review</option>
+                                <option value="block">Blocked</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary" id="clearFeedBtn">Clear</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>Live Transaction Feed</h2>
+                        <div class="feed-container" id="transactionFeed">
+                            <div style="text-align: center; color: #64748b; padding: 2rem;">
+                                Waiting for transaction data...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics Dashboard Page -->
+                <div id="metrics" class="page">
+                    <div class="grid grid-4">
+                        <div class="metric-card">
+                            <div class="metric-value" id="metricTps">0.0</div>
+                            <div class="metric-label">Transactions/sec</div>
+                            <div class="metric-change positive" id="tpsChange">+0%</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="metricTotal">0</div>
+                            <div class="metric-label">Total Transactions</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="metricFraud">0.0%</div>
+                            <div class="metric-label">Fraud Rate</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="metricLatency">0ms</div>
+                            <div class="metric-label">Avg Latency</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <h3>Transactions Per Second</h3>
+                            <div class="chart-container" id="tpsChart">
+                                <canvas width="400" height="250"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Fraud Score Distribution</h3>
+                            <div class="chart-container" id="fraudChart">
+                                <canvas width="400" height="250"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Decision Breakdown</h3>
+                            <div class="chart-container" id="decisionChart">
+                                <canvas width="400" height="250"></canvas>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Latency Over Time</h3>
+                            <div class="chart-container" id="latencyChart">
+                                <canvas width="400" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customers Page -->
+                <div id="customers" class="page">
+                    <div class="card">
+                        <h2>Generated Customers</h2>
+                        <div id="customersList" class="customer-list">
+                            <div style="text-align: center; color: #64748b; padding: 2rem;">
+                                No customers generated yet...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario Info Page -->
+                <div id="scenario" class="page">
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <h2>Current Scenario</h2>
+                            <div id="scenarioDetails">
+                                <p><strong>Name:</strong> <span id="currentScenario">--</span></p>
+                                <p><strong>Description:</strong> <span id="scenarioDescription">--</span></p>
+                                <p><strong>Expected Fraud Rate:</strong> <span id="expectedFraud">--</span></p>
+                                <p><strong>Actual Fraud Rate:</strong> <span id="actualFraud">--</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h2>Progress</h2>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="scenarioProgress" style="width: 0%;"></div>
+                            </div>
+                            <p style="margin-top: 0.5rem; text-align: center;">
+                                <span id="progressText">0% Complete</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Timeline</h2>
+                        <div class="timeline" id="scenarioTimeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div>Scenario not started</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Page -->
+                <div id="results" class="page">
+                    <div class="card">
+                        <h2>Simulation Results</h2>
+                        <div id="resultsContainer">
+                            <div style="text-align: center; color: #64748b; padding: 2rem;">
+                                No results available yet. Run a simulation to see results.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-3">
+                        <div class="card">
+                            <h3>Performance Summary</h3>
+                            <div id="performanceSummary">
+                                <p><strong>P50 Latency:</strong> <span id="p50Latency">--</span></p>
+                                <p><strong>P95 Latency:</strong> <span id="p95Latency">--</span></p>
+                                <p><strong>P99 Latency:</strong> <span id="p99Latency">--</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Fraud Detection</h3>
+                            <div id="fraudSummary">
+                                <p><strong>Accuracy:</strong> <span id="fraudAccuracy">--</span></p>
+                                <p><strong>False Positives:</strong> <span id="falsePositives">--</span></p>
+                                <p><strong>False Negatives:</strong> <span id="falseNegatives">--</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Recommendations</h3>
+                            <div id="recommendations">
+                                <p>Complete a simulation to get recommendations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="connectionStatus" class="connection-status disconnected">
-        Connecting to simulation...
-    </div>
-
-    <div class="container">
-        <!-- Control Panel -->
-        <div class="card control-panel">
-            <h2>Simulation Control</h2>
-            <div class="controls">
-                <button class="btn btn-primary" id="startBtn" disabled>
-                    <span class="loading" id="startLoading" style="display: none;"></span>
-                    Start
-                </button>
-                <button class="btn btn-secondary" id="pauseBtn" disabled>Pause</button>
-                <button class="btn btn-secondary" id="resumeBtn" disabled>Resume</button>
-                <button class="btn btn-danger" id="stopBtn" disabled>Stop</button>
-                
-                <div class="speed-control">
-                    <label for="speedInput">Speed:</label>
-                    <input type="number" id="speedInput" class="speed-input" value="100" min="1" max="10000" step="1">
-                    <span>x</span>
-                    <button class="btn btn-primary" id="setSpeedBtn" disabled>Set</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Overview Metrics -->
-        <div class="card">
-            <h2>Overview</h2>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-value" id="totalTransactions">0</div>
-                    <div class="metric-label">Total Transactions</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="fraudTransactions">0</div>
-                    <div class="metric-label">Fraud Detected</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="customersCreated">0</div>
-                    <div class="metric-label">Customers</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="accountsCreated">0</div>
-                    <div class="metric-label">Accounts</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Performance Metrics -->
-        <div class="card">
-            <h2>Performance</h2>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-value" id="transactionRate">0.0</div>
-                    <div class="metric-label">Transactions/sec</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="nexumLatency">0</div>
-                    <div class="metric-label">Nexum Latency (ms)</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="bastionLatency">0</div>
-                    <div class="metric-label">Bastion Latency (ms)</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="errorRate">0.0%</div>
-                    <div class="metric-label">Error Rate</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts -->
-        <div class="card">
-            <h2>Transaction Rate</h2>
-            <div class="chart-container" id="transactionChart">
-                Chart will appear here when data is available
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>Fraud Detection</h2>
-            <div class="chart-container" id="fraudChart">
-                Fraud detection metrics will appear here
-            </div>
-        </div>
-
-        <!-- Live Transaction Feed -->
-        <div class="card live-feed">
-            <h2>Live Transaction Feed</h2>
-            <div class="feed-container" id="transactionFeed">
-                <div style="text-align: center; color: #64748b; padding: 2rem;">
-                    Waiting for transaction data...
-                </div>
-            </div>
+    <!-- Connection Status Overlay (shown when disconnected) -->
+    <div id="connectionOverlay" class="connection-overlay" style="display: none;">
+        <div class="connection-card">
+            <h3>Connection Lost</h3>
+            <p>Attempting to reconnect to the simulation server...</p>
+            <div class="loading"></div>
         </div>
     </div>
 

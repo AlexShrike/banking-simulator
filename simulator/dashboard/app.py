@@ -296,6 +296,132 @@ class DashboardServer:
                 self.stats["errors"] += 1
                 raise HTTPException(status_code=500, detail=str(e))
                 
+        @self.app.post("/api/start")
+        async def start_simulation(request: Request):
+            """Start simulation with optional parameters"""
+            self.stats["total_requests"] += 1
+            
+            if not self.simulation_engine:
+                raise HTTPException(status_code=503, detail="Simulation engine not available")
+                
+            try:
+                body = await request.json() if request.headers.get("content-type") == "application/json" else {}
+                scenario = body.get("scenario", "normal_day")
+                
+                self.simulation_engine.start(scenario)
+                
+                # Broadcast system event
+                await websocket_manager.broadcast_system_event("simulation_started", {
+                    "timestamp": datetime.now().isoformat(),
+                    "action": "start",
+                    "scenario": scenario
+                })
+                
+                return {"status": "ok", "message": f"Simulation started with scenario: {scenario}"}
+            except Exception as e:
+                logger.error(f"Error starting simulation: {e}")
+                self.stats["errors"] += 1
+                raise HTTPException(status_code=500, detail=str(e))
+                
+        @self.app.get("/api/scenarios")
+        async def get_scenarios():
+            """Get available simulation scenarios"""
+            self.stats["total_requests"] += 1
+            
+            try:
+                # Import scenarios dynamically to avoid circular imports
+                from ..scenarios import get_available_scenarios
+                scenarios = get_available_scenarios()
+                
+                return {
+                    "status": "ok",
+                    "data": scenarios,
+                    "timestamp": datetime.now().isoformat()
+                }
+            except Exception as e:
+                logger.error(f"Error getting scenarios: {e}")
+                self.stats["errors"] += 1
+                # Return default scenarios if the function doesn't exist
+                return {
+                    "status": "ok", 
+                    "data": [
+                        {"name": "normal_day", "description": "Normal banking day simulation"},
+                        {"name": "fraud_attack", "description": "High fraud activity simulation"},
+                        {"name": "peak_hours", "description": "Peak transaction volume simulation"},
+                        {"name": "holiday_rush", "description": "Holiday shopping rush simulation"},
+                        {"name": "system_stress", "description": "System stress test simulation"}
+                    ],
+                    "timestamp": datetime.now().isoformat()
+                }
+                
+        @self.app.get("/api/customers")
+        async def get_customers():
+            """Get list of generated customers"""
+            self.stats["total_requests"] += 1
+            
+            try:
+                customers = []
+                if self.simulation_engine:
+                    # Get customers from simulation engine if available
+                    customers = getattr(self.simulation_engine, 'get_customers', lambda: [])()
+                
+                return {
+                    "status": "ok",
+                    "data": customers,
+                    "count": len(customers),
+                    "timestamp": datetime.now().isoformat()
+                }
+            except Exception as e:
+                logger.error(f"Error getting customers: {e}")
+                self.stats["errors"] += 1
+                raise HTTPException(status_code=500, detail=str(e))
+                
+        @self.app.get("/api/transactions")
+        async def get_transactions(limit: int = 100):
+            """Get recent transactions"""
+            self.stats["total_requests"] += 1
+            
+            try:
+                transactions = []
+                if self.simulation_engine:
+                    # Get recent transactions from simulation engine
+                    transactions = getattr(self.simulation_engine, 'get_recent_transactions', lambda x: [])(limit)
+                
+                return {
+                    "status": "ok",
+                    "data": transactions,
+                    "count": len(transactions),
+                    "limit": limit,
+                    "timestamp": datetime.now().isoformat()
+                }
+            except Exception as e:
+                logger.error(f"Error getting transactions: {e}")
+                self.stats["errors"] += 1
+                raise HTTPException(status_code=500, detail=str(e))
+                
+        @self.app.get("/api/results")
+        async def get_simulation_results():
+            """Get simulation results and summary statistics"""
+            self.stats["total_requests"] += 1
+            
+            try:
+                results = {}
+                if self.simulation_engine:
+                    results = getattr(self.simulation_engine, 'get_results', lambda: {})()
+                if self.metrics_collector:
+                    metrics = self.metrics_collector.get_summary_stats()
+                    results.update(metrics)
+                
+                return {
+                    "status": "ok",
+                    "data": results,
+                    "timestamp": datetime.now().isoformat()
+                }
+            except Exception as e:
+                logger.error(f"Error getting results: {e}")
+                self.stats["errors"] += 1
+                raise HTTPException(status_code=500, detail=str(e))
+                
         @self.app.get("/api/stats")
         async def get_dashboard_stats():
             """Get dashboard server statistics"""
